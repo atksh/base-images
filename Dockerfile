@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     xzdec \
     texlive-science \
     texlive-latex-extra \
+    texlive-extra-utils \
     texlive-lang-cjk \
     language-pack-ja \
     xdvik-ja \ 
