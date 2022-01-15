@@ -36,7 +36,9 @@ RUN apt-get update -y && \
     cpanm -n -q File::HomeDir && \
     cpanm -n -q Unicode::GCString && \
     apt-get remove -y cpanminus make gcc libc6-dev && \
-    apt-get clean && \
+    apt-get clean autoclean && \
+    apt-get autoremove --yes && \
+    rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workdir
