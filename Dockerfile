@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN tlmgr init-usertree
 RUN kanji-config-updmap-sys ipaex
+RUN cpanm Log::Log4perl Log::Dispatch::File YAML::Tiny File::HomeDir Unicode::GCString
 
 RUN apt-get update && \
     apt-get install -y \
