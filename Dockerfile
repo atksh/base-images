@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     evince \
     latexmk \
     xzdec \
+    texlive-science \
     texlive-latex-extra \
     texlive-lang-cjk \
     language-pack-ja \
@@ -17,9 +18,11 @@ RUN apt-get update && apt-get install -y \
 RUN tlmgr init-usertree
 RUN kanji-config-updmap-sys ipaex
 
-WORKDIR /tmp
-COPY update-tlmgr-latest.sh .
-RUN sh update-tlmgr-latest.sh --upgrade
+RUN apt-get update && \
+    apt-get install -y \
+    openssh-client git vim && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workdir
 CMD ["/bin/bash"]
