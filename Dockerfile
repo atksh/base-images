@@ -57,12 +57,6 @@ RUN npm install -g npm && \
     textlint-rule-preset-ja-technical-writing \
     textlint-rule-preset-ja-engineering-paper \
     textlint-rule-spellcheck-tech-word \
-    textlint-rule-no-mix-dearu-desumasu \
-    textlint-rule-preset-jtf-style \
     textlint-rule-prh \
-    textlint-rule-spellcheck-tech-word \
-    textlint-rule-no-double-negative-ja\
-    textlint-rule-ja-no-redundant-expression \
-    textlint-rule-no-exclamation-question-mark \
     textlint-rule-preset-japanese
 CMD ["/bin/bash"]
