@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y \
     git \
     vim \
     sudo \
+    nodejs \
+    npm \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
@@ -40,6 +42,11 @@ RUN apt-get update -y && \
     apt-get autoremove --yes && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
     rm -rf /var/lib/apt/lists/*
+RUN npm install --save-dev textlint && \
+    npm install --save-dev textlint-filter-rule-comments && \
+    npm install --save-dev textlint-rule-preset-ja-spacing && \
+    npm install --save-dev textlint-rule-preset-ja-technical-writing && \
+    npm install --save-dev textlint-plugin-latex2e
 
 WORKDIR /workdir
 ENV LANG=ja_JP.UTF-8
