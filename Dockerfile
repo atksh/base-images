@@ -50,11 +50,19 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
 RUN npm install -g npm && \
     npm install -g textlint && \
     npm install -g \
+    prh \
+    textlint-filter-rule-comments \ 
+    textlint-plugin-latex2e \
     textlint-rule-preset-ja-spacing \
     textlint-rule-preset-ja-technical-writing \
+    textlint-rule-preset-ja-engineering-paper \
     textlint-rule-spellcheck-tech-word \
     textlint-rule-no-mix-dearu-desumasu \
+    textlint-rule-preset-jtf-style \
+    textlint-rule-prh \
+    textlint-rule-spellcheck-tech-word \
     textlint-rule-no-double-negative-ja\
     textlint-rule-ja-no-redundant-expression \
-    textlint-rule-no-exclamation-question-mark
+    textlint-rule-no-exclamation-question-mark \
+    textlint-rule-preset-japanese
 CMD ["/bin/bash"]
