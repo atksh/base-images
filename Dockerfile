@@ -42,11 +42,11 @@ RUN apt-get update -y && \
     apt-get autoremove --yes && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/ && \
     rm -rf /var/lib/apt/lists/*
-RUN npm install --save-dev textlint && \
-    npm install --save-dev textlint-filter-rule-comments && \
-    npm install --save-dev textlint-rule-preset-ja-spacing && \
-    npm install --save-dev textlint-rule-preset-ja-technical-writing && \
-    npm install --save-dev textlint-plugin-latex2e
+RUN npm install textlint && \
+    npm install textlint-filter-rule-comments && \
+    npm install textlint-rule-preset-ja-spacing && \
+    npm install textlint-rule-preset-ja-technical-writing && \
+    npm install textlint-plugin-latex2e
 
 WORKDIR /workdir
 ENV LANG=ja_JP.UTF-8
