@@ -54,7 +54,7 @@ RUN cd cpython && \
   --with-system-ffi \
   --with-ensurepip=yes \
 	--with-lto \
-  --with-ssl \
+  --without-pymalloc \
   LDFLAGS="-Wl,-rpath /usr/local/lib" \
 	&& perl -i -p0e 's/(LIBRARY_OBJS=.*?Python\/frozen.o)/`cat new`/se' Makefile \
 	&& make -j$(nproc) \
@@ -84,8 +84,7 @@ COPY --from=0 /usr/local/lib/python3.9 /usr/local/lib/python3.9
 COPY --from=0 /usr/local/lib/python3.9/lib-dynload /usr/local/lib/python3.9/lib-dynload
 COPY --from=0 /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
-ENV PYTHONMALLOC=malloc
-RUN apt-get update && apt-get install -y libexpat1 libffi-dev \
+RUN apt-get update && apt-get install -y libexpat1 libffi-dev sqlite3 \
     && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 RUN MIMALLOC_SHOW_STATS=1 PYTHONMALLOCSTATS=1  python -c '[*map(str, range(1000))]'
