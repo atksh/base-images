@@ -60,7 +60,9 @@ COPY --from=builder /lib/x86_64-linux-gnu /lib/x86_64-linux-gnu
 
 # ffmpeg-python
 RUN pip install --no-cache \
-    ffmpeg-python
+    ffmpeg-python \
+    opencv-python \
+    Pillow
 
 ENTRYPOINT ["/bin/bash"]
 
