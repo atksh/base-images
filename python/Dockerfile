@@ -125,4 +125,5 @@ RUN set -eux; \
 	\
 	pip --version
 
+ENV PYTHONMALLOC malloc
 CMD ["python3"]
