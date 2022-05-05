@@ -72,7 +72,7 @@ RUN pip uninstall -y setuptools \
   && rm -rf /usr/local/lib/python*/config-*-x86_64-linux-gnu \
   && find /usr/local/lib -name "*.pyc" | xargs rm
 
-FROM debian:bullseye
+FROM debian:bullseye-slim
 COPY --from=0 /usr/local/lib/libpython*.so* /usr/local/lib
 COPY --from=0 /usr/local/lib/pkgconfig /usr/local/lib
 COPY --from=0 /usr/local/bin /usr/local/bin
