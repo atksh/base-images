@@ -71,7 +71,7 @@ RUN pip uninstall -y setuptools \
   && rm -rf /usr/local/lib/python*/test \
   && rm -rf /usr/local/lib/python*/config-*-x86_64-linux-gnu
 
-FROM debian:bullseye-slim
+FROM debian:bullseye
 COPY --from=0 /usr/local/lib/libpython*.so.1.0 /usr/local/lib
 COPY --from=0 /usr/local/bin /usr/local/bin
 COPY --from=0 /usr/local/lib/python3.9 /usr/local/lib/python3.9
