@@ -15,9 +15,4 @@ RUN pip install --no-cache \
     ffmpeg-python \
     opencv-python \
     opencv-contrib-python \
-    Pillow \
-    && pip install --no-cache \
-    torch \
-    torchvision \
-    torchaudio \
-    --extra-index-url https://download.pytorch.org/whl/cpu
+    Pillow
