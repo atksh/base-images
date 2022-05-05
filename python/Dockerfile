@@ -81,7 +81,7 @@ COPY --from=0 /usr/local/bin /usr/local/bin
 COPY --from=0 /usr/local/lib/python3.9 /usr/local/lib/python3.9
 
 ENV PYTHONMALLOC=malloc
-RUN apt-get update && apt-get install -y libexpat1 \
+RUN apt-get update && apt-get install -y libexpat1 libffi-dev \
     && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 RUN MIMALLOC_SHOW_STATS=1 PYTHONMALLOCSTATS=1  python -c '[*map(str, range(1000))]'
