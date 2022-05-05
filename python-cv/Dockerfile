@@ -21,6 +21,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /tmp
+
 # OpenCV
 RUN wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip \
   && unzip ${OPENCV_VERSION}.zip \
@@ -53,6 +54,9 @@ RUN apt-get update && \
 
 FROM python:3.9-buster
 COPY --from=builder /usr/local /usr/local
+COPY --from=builder /usr/bin /usr/bin
+COPY --from=builder /usr/lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu
+COPY --from=builder /lib/x86_64-linux-gnu /lib/x86_64-linux-gnu
 
 # ffmpeg-python
 RUN pip install --no-cache \
