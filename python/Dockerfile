@@ -45,12 +45,13 @@ RUN cd cpython \
 	/tmp/mimalloc.o' > new
 RUN cd cpython && \
 	./configure \
+  --enable-loadable-sqlite-extensions \
 	--enable-optimizations \
 	--enable-option-checking=fatal \
 	--enable-shared \
+  --with-system-expat \
+  --with-system-ffi \
   --with-ensurepip=yes \
-  --without-system-ffi \
-  --without-system-expat \
 	--with-lto \
   LDFLAGS="-Wl,-rpath /usr/local/lib" \
 	&& perl -i -p0e 's/(LIBRARY_OBJS=.*?Python\/frozen.o)/`cat new`/se' Makefile \
@@ -80,6 +81,8 @@ COPY --from=0 /usr/local/bin /usr/local/bin
 COPY --from=0 /usr/local/lib/python3.9 /usr/local/lib/python3.9
 
 ENV PYTHONMALLOC=malloc
+RUN apt-get update && apt-get install -y libexpat1 libffi-dev libsqlite3-dev \
+    && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 RUN MIMALLOC_SHOW_STATS=1 PYTHONMALLOCSTATS=1  python -c '[*map(str, range(1000))]'
 
