@@ -69,12 +69,15 @@ RUN cd cpython && \
 RUN pip uninstall -y setuptools \
   && pip install setuptools \
   && rm -rf /usr/local/lib/python*/test \
-  && rm -rf /usr/local/lib/python*/config-*-x86_64-linux-gnu
+  && rm -rf /usr/local/lib/python*/config-*-x86_64-linux-gnu \
+  && find /usr/local/lib -name "*.pyc" | xargs rm
 
 FROM debian:bullseye
-COPY --from=0 /usr/local/lib/libpython*.so.1.0 /usr/local/lib
+COPY --from=0 /usr/local/lib/libpython*.so* /usr/local/lib
+COPY --from=0 /usr/local/lib/pkgconfig /usr/local/lib
 COPY --from=0 /usr/local/bin /usr/local/bin
 COPY --from=0 /usr/local/lib/python3.9 /usr/local/lib/python3.9
+COPY --from=0 /usr/local/include/python3.9 /usr/local/include
 
 RUN apt-get update && apt-get install -y libexpat1 libffi-dev sqlite3 \
     && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
