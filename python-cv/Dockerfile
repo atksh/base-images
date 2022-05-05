@@ -1,4 +1,4 @@
-FROM atksh:python
+FROM atksh/python
 
 RUN apt-get update \
     && apt-get install -y \
