@@ -75,8 +75,6 @@ FROM debian:bullseye
 COPY --from=0 /usr/local/lib/libpython*.so.1.0 /usr/local/lib
 COPY --from=0 /usr/local/bin /usr/local/bin
 COPY --from=0 /usr/local/lib/python3.9 /usr/local/lib/python3.9
-COPY --from=0 /usr/local/lib/python3.9/lib-dynload /usr/local/lib/python3.9/lib-dynload
-COPY --from=0 /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
 RUN apt-get update && apt-get install -y libexpat1 libffi-dev sqlite3 \
     && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
