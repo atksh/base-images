@@ -35,8 +35,8 @@ RUN cd /tmp \
 	$(LIBRARY_OBJS_OMIT_FROZEN) \
 	Python/frozen.o \
 	/tmp/mimalloc.o' > /tmp/new \
-  && rm -rf /tmp/mimalloc \
-  && set -eux; \
+  && rm -rf /tmp/mimalloc
+RUN set -eux; \
 	\
 	wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
 	wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc"; \
