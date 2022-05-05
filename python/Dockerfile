@@ -71,14 +71,8 @@ RUN pip uninstall -y setuptools \
   && rm -rf /usr/local/lib/python*/test \
   && rm -rf /usr/local/lib/python*/config-*-x86_64-linux-gnu
 
-FROM debian:bullseye
+FROM debian:bullseye-slim
 COPY --from=0 /usr/local/lib/libpython*.so.1.0 /usr/local/lib
-COPY --from=0 /lib/x86_64-linux-gnu/libc.so.6 /lib/x86_64-linux-gnu
-COPY --from=0 /lib/x86_64-linux-gnu/libpthread.so.0 /lib/x86_64-linux-gnu
-COPY --from=0 /lib/x86_64-linux-gnu/libdl.so.2 /lib/x86_64-linux-gnu
-COPY --from=0 /lib/x86_64-linux-gnu/libutil.so.1 /lib/x86_64-linux-gnu
-COPY --from=0 /lib/x86_64-linux-gnu/libm.so.6 /lib/x86_64-linux-gnu
-COPY --from=0 /lib64/ld-linux-x86-64.so.2 /lib64/
 COPY --from=0 /usr/local/bin /usr/local/bin
 COPY --from=0 /usr/local/lib/python3.9 /usr/local/lib/python3.9
 COPY --from=0 /usr/local/lib/python3.9/lib-dynload /usr/local/lib/python3.9/lib-dynload
@@ -86,7 +80,6 @@ COPY --from=0 /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/si
 
 RUN apt-get update && apt-get install -y libexpat1 libffi-dev sqlite3 \
     && apt-get clean && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
 RUN MIMALLOC_SHOW_STATS=1 PYTHONMALLOCSTATS=1  python -c '[*map(str, range(1000))]'
 
 ENTRYPOINT python
