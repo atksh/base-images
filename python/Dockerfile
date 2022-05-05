@@ -19,7 +19,6 @@ RUN apt-get update \
   liblzma-dev \
   libncursesw5-dev \
   libreadline-dev \
-  libsqlite3-dev \
   libssl-dev \
   tk-dev \
   uuid-dev \
@@ -46,12 +45,10 @@ RUN cd cpython \
 	/tmp/mimalloc.o' > new
 RUN cd cpython && \
 	./configure \
-	--enable-loadable-sqlite-extensions \
 	--enable-optimizations \
 	--enable-option-checking=fatal \
 	--enable-shared \
-	--with-system-expat \
-	--with-system-ffi \
+  --with-ensurepip=yes \
 	--with-lto \
   LDFLAGS="-Wl,-rpath /usr/local/lib" \
 	&& perl -i -p0e 's/(LIBRARY_OBJS=.*?Python\/frozen.o)/`cat new`/se' Makefile \
