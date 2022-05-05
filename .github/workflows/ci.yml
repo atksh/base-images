@@ -29,6 +29,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./${{ matrix.name}} }}
-          file: ./${{ matrix.name}} }}/Dockerfile
+          file: ./${{ matrix.name }}/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.name }}
