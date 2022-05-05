@@ -1,5 +1,5 @@
 FROM buildpack-deps:bullseye
-ENV PYTHON_VERSION v3.9.12
+ENV PYTHON_VERSION 3.9.12
 ENV MIMALLOC_VERSION v1.7.6
 ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
 
@@ -18,6 +18,7 @@ RUN set -eux; \
 		tk-dev \
 		uuid-dev \
     git \
+    cmake \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
@@ -33,9 +34,9 @@ RUN cd /tmp \
 	$(LIBRARY_OBJS_OMIT_FROZEN) \
 	Python/frozen.o \
 	/tmp/mimalloc.o' > /tmp/new \
-  && rm -rf /tmp/mimalloc \
+  && rm -rf /tmp/mimalloc
 
-  && set -eux; \
+RUN set -eux; \
 	\
 	wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
 	wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc"; \
