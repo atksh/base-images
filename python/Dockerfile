@@ -30,7 +30,8 @@ RUN cd /tmp \
 	&& cmake .. \
 	&& make \
 	&& make install \
-	&& echo 'LIBRARY_OBJS=   \
+  && cp /usr/local/lib/mimalloc-*/mimalloc.o /tmp/mimalloc.o \
+  && echo 'LIBRARY_OBJS=   \
 	$(LIBRARY_OBJS_OMIT_FROZEN) \
 	Python/frozen.o \
 	/tmp/mimalloc.o' > /tmp/new \
@@ -61,7 +62,8 @@ RUN set -eux; \
 		--without-ensurepip \
     --with-lto \
 	; \
-	perl -i -p0e 's/(LIBRARY_OBJS=.*?Python\/frozen.o)/`cat /tmp/new`/se' Makefile; \
+  mv /tmp/new new; \
+	perl -i -p0e 's/(LIBRARY_OBJS=.*?Python\/frozen.o)/`cat new`/se' Makefile; \
 	nproc="$(nproc)"; \
 	make -j "$nproc" \
 	; \
