@@ -16,3 +16,4 @@ RUN pip install --no-cache \
     opencv-python \
     opencv-contrib-python \
     Pillow
+
