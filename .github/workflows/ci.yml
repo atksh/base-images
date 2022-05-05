@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name: ["ubuntu-tex", "python-cv"]
+        name: ["ubuntu-tex", "python-cv", "python-selenium"]
     steps:
       -
         name: Checkout 
