@@ -1,6 +1,6 @@
 FROM buildpack-deps:bullseye
 ENV PYTHON_VERSION 3.9.12
-ENV MIMALLOC_VERSION v1.7.6
+ENV MIMALLOC_VERSION v2.0.6
 ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
 
 # ensure local python is preferred over distribution python
