@@ -1,5 +1,5 @@
 FROM buildpack-deps:bullseye
-ENV PYTHON_VERSION 3.9.12
+ENV PYTHON_VERSION 3.10.5
 ENV MIMALLOC_VERSION v2.0.6
 ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
 
@@ -126,7 +126,8 @@ RUN set -eux; \
 
 RUN apt-get update && apt-get upgrade -y \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+	&& pip install -U --no-cache-dir pip setuptools wheel
 
 ENV PYTHONMALLOC malloc
 CMD ["python3"]

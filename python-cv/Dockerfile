@@ -11,7 +11,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache \
+RUN pip install --no-cache-dir \
     ffmpeg-python \
     opencv-python \
     opencv-contrib-python \

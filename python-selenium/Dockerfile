@@ -21,9 +21,11 @@ RUN apt-get update && \
     xvfb \
     xserver-xephyr \
     tigervnc-standalone-server \
-    xfonts-base
+    xfonts-base \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache \
+RUN pip install --no-cache-dir \
     selenium \
     pyvirtualdisplay
 
