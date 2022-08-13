@@ -19,6 +19,7 @@ RUN set -eux; \
 	libbluetooth-dev \
 	tk-dev \
 	uuid-dev \
+	tzdata \
     git \
     cmake \
 	; \
