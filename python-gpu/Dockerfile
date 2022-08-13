@@ -16,13 +16,14 @@ ENV LANG C.UTF-8
 RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		libbluetooth-dev \
-		tk-dev \
-		uuid-dev \
+	libbluetooth-dev \
+	tk-dev \
+	uuid-dev \
     git \
     cmake \
 	; \
 	rm -rf /var/lib/apt/lists/*
+ENV TZ=Asia/Tokyo
 
 RUN cd /tmp \
   && git clone --depth 1 --branch $MIMALLOC_VERSION https://github.com/microsoft/mimalloc \
