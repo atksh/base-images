@@ -11,6 +11,8 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PAT
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
+ENV TZ=Asia/Tokyo
 
 # runtime dependencies
 RUN set -eux; \
@@ -19,12 +21,14 @@ RUN set -eux; \
 	libbluetooth-dev \
 	tk-dev \
 	uuid-dev \
-	tzdata \
     git \
     cmake \
 	; \
+	apt-get install -y \
+	software-properties-common \
+	tzdata \
+	; \
 	rm -rf /var/lib/apt/lists/*
-ENV TZ=Asia/Tokyo
 
 RUN cd /tmp \
   && git clone --depth 1 --branch $MIMALLOC_VERSION https://github.com/microsoft/mimalloc \
