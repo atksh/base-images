@@ -26,6 +26,7 @@ RUN set -eux; \
 	software-properties-common \
 	tzdata \
 	wget \
+	libffi-dev \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
