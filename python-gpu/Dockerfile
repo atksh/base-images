@@ -23,10 +23,9 @@ RUN set -eux; \
 	uuid-dev \
     git \
     cmake \
-	; \
-	apt-get install -y \
 	software-properties-common \
 	tzdata \
+	wget \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
