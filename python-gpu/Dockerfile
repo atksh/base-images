@@ -1,144 +1,29 @@
-FROM nvidia/cuda:11.6.1-cudnn8-devel-ubuntu20.04
-ENV PYTHON_VERSION 3.10.6
-ENV MIMALLOC_VERSION v2.0.6
-ENV GPG_KEY CFDCA245B1043CF2A5F97865FFE87404168BD847
+FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
 
-# ensure local python is preferred over distribution python
-ENV PATH /usr/local/bin:$PATH
-ENV PATH /usr/local/nvidia/bin:/usr/local/cuda/bin:${PATH}
-ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH}
-
-# http://bugs.python.org/issue19846
-# > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG C.UTF-8
+# Python and pip
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=Asia/Tokyo
+RUN apt-get update && apt-get install -y software-properties-common tzdata
+RUN add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get install -y python3.9 python3.9-dev python3.9-distutils \
+    software-properties-common wget apt-utils patchelf git curl libprotobuf-dev protobuf-compiler cmake \
+    && apt-get autoremove -y
 
-# runtime dependencies
-RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-	libbluetooth-dev \
-	tk-dev \
-	uuid-dev \
-    git \
-    cmake \
-	software-properties-common \
-	tzdata \
-	wget \
-	libffi-dev \
-	; \
-	rm -rf /var/lib/apt/lists/*
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1 \
+    && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+    && python get-pip.py \
+    && rm get-pip.py \
+    && pip install --upgrade --no-cache-dir pip setuptools wheel
 
-RUN cd /tmp \
-  && git clone --depth 1 --branch $MIMALLOC_VERSION https://github.com/microsoft/mimalloc \
-	&& cd mimalloc \
-	&& mkdir build \
-	&& cd build \
-	&& cmake .. \
-	&& make \
-	&& make install \
-  && cp /usr/local/lib/mimalloc-*/mimalloc.o /tmp/mimalloc.o \
-  && echo 'LIBRARY_OBJS=   \
-	$(LIBRARY_OBJS_OMIT_FROZEN) \
-	Python/frozen.o \
-	/tmp/mimalloc.o' > /tmp/new \
-  && rm -rf /tmp/mimalloc
-RUN set -eux; \
-	\
-	wget -O python.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz"; \
-	wget -O python.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc"; \
-	GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
-	gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$GPG_KEY"; \
-	gpg --batch --verify python.tar.xz.asc python.tar.xz; \
-	command -v gpgconf > /dev/null && gpgconf --kill all || :; \
-	rm -rf "$GNUPGHOME" python.tar.xz.asc; \
-	mkdir -p /usr/src/python; \
-	tar --extract --directory /usr/src/python --strip-components=1 --file python.tar.xz; \
-	rm python.tar.xz; \
-	\
-	cd /usr/src/python; \
-	gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
-	./configure \
-		--build="$gnuArch" \
-		--enable-loadable-sqlite-extensions \
-		--enable-optimizations \
-		--enable-option-checking=fatal \
-		--enable-shared \
-		--with-system-expat \
-		--without-ensurepip \
-    --with-lto \
-	; \
-  mv /tmp/new new; \
-	perl -i -p0e 's/(LIBRARY_OBJS=.*?Python\/frozen.o)/`cat new`/se' Makefile; \
-	nproc="$(nproc)"; \
-	make -j "$nproc" \
-	; \
-	make install; \
-  rm new; \
-	\
-# enable GDB to load debugging data: https://github.com/docker-library/python/pull/701
-	bin="$(readlink -ve /usr/local/bin/python3)"; \
-	dir="$(dirname "$bin")"; \
-	mkdir -p "/usr/share/gdb/auto-load/$dir"; \
-	cp -vL Tools/gdb/libpython.py "/usr/share/gdb/auto-load/$bin-gdb.py"; \
-	\
-	cd /; \
-	rm -rf /usr/src/python; \
-	\
-	find /usr/local -depth \
-		\( \
-			\( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
-			-o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \) \) \
-		\) -exec rm -rf '{}' + \
-	; \
-	\
-	ldconfig; \
-	\
-	python3 --version
+# PyTorch
+RUN pip install torch==1.12.1+cu113 torchvision==0.13.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
 
-# make some useful symlinks that are expected to exist ("/usr/local/bin/python" and friends)
-RUN set -eux; \
-	for src in idle3 pydoc3 python3 python3-config; do \
-		dst="$(echo "$src" | tr -d 3)"; \
-		[ -s "/usr/local/bin/$src" ]; \
-		[ ! -e "/usr/local/bin/$dst" ]; \
-		ln -svT "$src" "/usr/local/bin/$dst"; \
-	done
+# ORT Module
+RUN pip install onnx==1.12.0 ninja==1.10.2.3
+RUN pip install onnxruntime-training==1.12.0 -f https://download.onnxruntime.ai/onnxruntime_stable_cu113.html
 
-# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 22.0.4
-# https://github.com/docker-library/python/issues/365
-ENV PYTHON_SETUPTOOLS_VERSION 58.1.0
-# https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/38e54e5de07c66e875c11a1ebbdb938854625dd8/public/get-pip.py
-ENV PYTHON_GET_PIP_SHA256 e235c437e5c7d7524fbce3880ca39b917a73dc565e0c813465b7a7a329bb279a
+RUN pip install torch-ort==1.12.0
+ENV TORCH_CUDA_ARCH_LIST="5.2 6.0 6.1 7.0 7.5 8.0 8.6+PTX"
+RUN python -m torch_ort.configure
 
-RUN set -eux; \
-	\
-	wget -O get-pip.py "$PYTHON_GET_PIP_URL"; \
-	echo "$PYTHON_GET_PIP_SHA256 *get-pip.py" | sha256sum -c -; \
-	\
-	export PYTHONDONTWRITEBYTECODE=1; \
-	\
-	python get-pip.py \
-		--disable-pip-version-check \
-		--no-cache-dir \
-		--no-compile \
-		"pip==$PYTHON_PIP_VERSION" \
-		"setuptools==$PYTHON_SETUPTOOLS_VERSION" \
-	; \
-	rm -f get-pip.py; \
-	\
-	pip --version
-
-RUN apt-get update && apt-get upgrade -y \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-	&& pip install -U --no-cache-dir pip setuptools wheel
-
-ENV PYTHONMALLOC malloc
-# install torch
-RUN pip install -U --no-cache-dir \
-    torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
-CMD ["python3"]
