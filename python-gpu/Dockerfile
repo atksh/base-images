@@ -17,7 +17,7 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1 \
     && pip install --upgrade --no-cache-dir pip setuptools wheel
 
 # PyTorch
-RUN pip install torch==1.12.1+cu113 torchvision==0.13.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
+RUN pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
 
 # ORT Module
 RUN pip install onnx==1.12.0 ninja==1.10.2.3
