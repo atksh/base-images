@@ -15,8 +15,8 @@ RUN add-apt-repository ppa:deadsnakes/ppa \
     libgl1-mesa-dev \
     ffmpeg \
     && apt-get clean \
+    && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
-    && apt-get autoremove -y
 
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1 \
     && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
