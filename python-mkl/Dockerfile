@@ -27,9 +27,12 @@ RUN ldconfig
 
 FROM atksh/python AS final
 COPY --from=configure-mkl / /
-RUN apt-get update && apt-get install -y gfortran
+RUN apt-get update \
+    && apt-get install -y gfortran libblas-dev liblapack-dev
 ENV MKL_ROOT_DIR /opt/intel/mkl
 ENV LD_LIBRARY_PATH $MKL_ROOT_DIR/lib/intel64:/opt/intel/lib/intel64_lin:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH $MKL_ROOT_DIR/lib/intel64:$LIBRARY_PATH
 ENV PKG_CONFIG_PATH $MKL_ROOT_DIR/bin/pkgconfig:$PKG_CONFIG_PATH
+ENV NPY_BLAS_ORDER MKL
+ENV NPY_LAPACK_ORDER MKL
 
