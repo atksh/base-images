@@ -27,8 +27,11 @@ RUN ldconfig
 
 FROM atksh/python AS final
 COPY --from=configure-mkl / /
-RUN apt-get update \
-    && apt-get install -y gfortran libopenblas-dev
+RUN echo "[mkl] \n\
+library_dirs = /opt/intel/mkl/lib/intel64 \n\
+include_dirs = /opt/intel/mkl/include \n\
+mkl_libs = mkl_rt \n\
+lapack_libs =" > ~/.numpy-site.cfg
 ENV MKL_ROOT_DIR /opt/intel/mkl
 ENV LD_LIBRARY_PATH $MKL_ROOT_DIR/lib/intel64:/opt/intel/lib/intel64_lin:$LD_LIBRARY_PATH
 ENV LIBRARY_PATH $MKL_ROOT_DIR/lib/intel64:$LIBRARY_PATH
