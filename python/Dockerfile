@@ -125,10 +125,13 @@ RUN set -eux; \
 	\
 	pip --version
 
-RUN apt-get update && apt-get upgrade -y \
+RUN apt-get update \
+    && apt-get install gfortran \
+    && apt-get upgrade -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-	&& pip install -U --no-cache-dir pip setuptools wheel
+    && pip install -U --no-cache-dir \
+    pip setuptools wheel poetry==1.2.0rc2
 
 ENV PYTHONMALLOC malloc
 CMD ["python3"]
