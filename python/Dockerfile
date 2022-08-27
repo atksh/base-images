@@ -134,4 +134,5 @@ RUN apt-get update \
 	&& poetry config virtualenvs.create false 
 
 ENV PYTHONMALLOC malloc
+ENV LD_PRELOAD /usr/lib/libmimalloc.so
 CMD ["python3"]
