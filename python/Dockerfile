@@ -1,7 +1,7 @@
 FROM buildpack-deps:bullseye
-ENV PYTHON_VERSION 3.10.6
+ENV PYTHON_VERSION 3.9.12
 ENV MIMALLOC_VERSION v2.0.6
-ENV GPG_KEY CFDCA245B1043CF2A5F97865FFE87404168BD847
+ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
 
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
@@ -130,7 +130,7 @@ RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && pip install -U --no-cache-dir \
+ :  && pip install -U --no-cache-dir \
     pip setuptools wheel poetry==1.2.0rc2
 
 ENV PYTHONMALLOC malloc
