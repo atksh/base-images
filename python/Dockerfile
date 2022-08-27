@@ -126,7 +126,6 @@ RUN set -eux; \
 	pip --version
 
 RUN apt-get update \
-    && apt-get install gfortran \
     && apt-get upgrade -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
