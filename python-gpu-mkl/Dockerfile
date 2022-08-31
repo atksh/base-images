@@ -21,8 +21,15 @@ RUN add-apt-repository ppa:deadsnakes/ppa \
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1 \
     && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
     && python get-pip.py \
-    && rm get-pip.py \
-    && pip install --upgrade --no-cache-dir pip setuptools wheel
+    && rm get-pip.py
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install -U --no-cache-dir \
+    pip setuptools wheel poetry==1.2.0rc2 \
+	&& poetry config virtualenvs.create false 
 
 FROM base AS install-mkl
 # Install basic software for adding apt repository and downloading source code to compile
