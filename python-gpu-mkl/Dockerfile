@@ -28,7 +28,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && pip install -U --no-cache-dir \
-    pip setuptools wheel poetry==1.2.0rc2 \
+    pip setuptools wheel poetry==1.2.0 \
 	&& poetry config virtualenvs.create false 
 
 FROM base AS install-mkl
