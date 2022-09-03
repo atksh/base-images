@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        name: ["python", "python-gpu", "ubuntu-tex", "ubuntu-container-disk"]
+        name: ["python", "python-gpu", "ubuntu-tex", "ubuntu-container-disk", "sparsify"]
     steps:
       -
         name: Checkout 
