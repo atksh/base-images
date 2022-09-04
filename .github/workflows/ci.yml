@@ -38,7 +38,7 @@ jobs:
     needs: first-build-and-push
     strategy:
       matrix:
-        name: ["python-cv", "python-selenium", "python-torch", "python-mkl", "python-gpu-mkl"]
+        name: ["python-cv", "python-selenium", "python-torch", "python-mkl", "python-trt-onnx"]
     steps:
       -
         name: Checkout 
